@@ -5,15 +5,24 @@ package graph
 
 import (
 	"context"
-	"fmt"
-	_"os/user"
+	_"fmt"
+	_ "os/user"
 
 	"github.com/NutthakornS/todos/graph/generated"
 	"github.com/NutthakornS/todos/graph/model"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented"))
+	createdTodo := model.Todo{
+		ID:   "yyyy-zzzz",
+		Text: input.Text,
+		Done: false,
+		User: &model.User{
+			ID:   input.UserID,
+			Name: "Someone in the world",
+		},
+	}
+	return &createdTodo, nil
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
