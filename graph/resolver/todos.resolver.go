@@ -6,6 +6,7 @@ package resolver
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/NutthakornS/todos/graph/generated"
 	"github.com/NutthakornS/todos/graph/model"
@@ -15,12 +16,16 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	panic(fmt.Errorf("not implemented"))
 }
 
+func (r *mutationResolver) UpdateTodo(ctx context.Context, id string, input model.NewTodo) (*model.Todo, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
 	result := []*model.Todo{}
-	user := model.User {
-		ID: "milos-123",
+	user := model.User{
+		ID:   "milos-123",
 		Name: "Riccado",
-		LastName: "Milos",
+		// LastName: "Milos",
 	}
 	todo := model.Todo{
 		ID:   "todo-milos-123",

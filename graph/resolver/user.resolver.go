@@ -5,10 +5,18 @@ package resolver
 
 import (
 	"context"
-	_"fmt"
+	"fmt"
 
 	"github.com/NutthakornS/todos/graph/model"
 )
+
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) UpdateUser(ctx context.Context, id string, body model.NewUser) (bool, error) {
+	panic(fmt.Errorf("not implemented"))
+}
 
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 	users := []*model.User{}
@@ -18,4 +26,8 @@ func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 	}
 	result := append(users, &user)
 	return result, nil
+}
+
+func (r *queryResolver) FindUserByName(ctx context.Context, name string) ([]*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
 }
