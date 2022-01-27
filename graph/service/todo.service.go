@@ -24,3 +24,7 @@ func (s *todoService) Todos() ([]*model.Todo, error) {
 	res := append(result, &todo)
 	return res, nil
 }
+
+func (s *todoService) User(obj *model.Todo) ([]*model.User, error) {
+	return nil, nil
+}

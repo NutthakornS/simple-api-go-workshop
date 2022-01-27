@@ -9,6 +9,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/NutthakornS/todos/graph/generated"
 	"github.com/NutthakornS/todos/graph/resolver"
+	"github.com/NutthakornS/todos/graph/service"
 )
 
 const defaultPort = "8080"
@@ -18,6 +19,8 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
+
+	service.ConnectToMongo()
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolver.Resolver{}}))
 
