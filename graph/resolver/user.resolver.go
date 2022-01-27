@@ -12,7 +12,7 @@ import (
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	return service.UserService.CreateUser(input)
 }
 
 func (r *mutationResolver) UpdateUser(ctx context.Context, id string, body model.NewUser) (bool, error) {

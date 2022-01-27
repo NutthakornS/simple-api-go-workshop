@@ -29,5 +29,4 @@ func ConnectToMongo() {
 	if err != nil {
 		panic(err)
 	}
-	defer MongoClient.Disconnect(context.TODO())
 }

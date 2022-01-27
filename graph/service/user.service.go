@@ -1,6 +1,11 @@
 package service
 
-import "github.com/NutthakornS/todos/graph/model"
+import (
+	"context"
+
+	"github.com/NutthakornS/todos/graph/model"
+	"go.mongodb.org/mongo-driver/bson"
+)
 
 type userService struct{}
 
@@ -16,4 +21,19 @@ func (s *userService) Users() ([]*model.User, error) {
 	}
 	result := append(users, &usr)
 	return result, nil
+}
+
+func (s *userService) CreateUser(input model.NewUser) (*model.User, error) {
+	col := MongoDb.Collection("user")
+	result, err := col.InsertOne(context.TODO(), input)
+	if err != nil {
+		return nil, err
+	} else {
+		newU := model.User{}
+		err := col.FindOne(context.TODO(), bson.M{"_id": result.InsertedID}).Decode(&newU)
+		if err != nil {
+			return nil, err
+		}
+		return &newU, nil
+	}
 }
