@@ -6,10 +6,10 @@ package resolver
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/NutthakornS/todos/graph/generated"
 	"github.com/NutthakornS/todos/graph/model"
+	"github.com/NutthakornS/todos/graph/service"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
@@ -21,20 +21,7 @@ func (r *mutationResolver) UpdateTodo(ctx context.Context, id string, input mode
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	result := []*model.Todo{}
-	user := model.User{
-		ID:   "milos-123",
-		Name: "Riccado",
-		// LastName: "Milos",
-	}
-	todo := model.Todo{
-		ID:   "todo-milos-123",
-		Text: "Dance practice",
-		Done: true,
-		User: &user,
-	}
-	res := append(result, &todo)
-	return res, nil
+	return service.TodoService.Todos()
 }
 
 // Mutation returns generated.MutationResolver implementation.

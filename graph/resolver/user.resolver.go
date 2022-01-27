@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/NutthakornS/todos/graph/model"
+	"github.com/NutthakornS/todos/graph/service"
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
@@ -19,13 +20,7 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, id string, body model
 }
 
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
-	users := []*model.User{}
-	user := model.User{
-		ID:   "dang-001",
-		Name: "Aj.Dang",
-	}
-	result := append(users, &user)
-	return result, nil
+	return service.UserService.Users()
 }
 
 func (r *queryResolver) FindUserByName(ctx context.Context, name string) ([]*model.User, error) {
