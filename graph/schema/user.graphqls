@@ -1,5 +1,5 @@
 type User {
-  id: ID!
+  id: ID! @goTag(key: "bson", value: "_id,omitempty")
   name: String!
   lastName: String
 }

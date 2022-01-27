@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -325,7 +326,7 @@ extend type Mutation {
 }
 `, BuiltIn: false},
 	{Name: "graph/schema/user.graphqls", Input: `type User {
-  id: ID!
+  id: ID! @goTag(key: "bson", value: "_id,omitempty")
   name: String!
   lastName: String
 }
@@ -1029,8 +1030,36 @@ func (ec *executionContext) _User_id(ctx context.Context, field graphql.Collecte
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return obj.ID, nil
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			key, err := ec.unmarshalNString2string(ctx, "bson")
+			if err != nil {
+				return nil, err
+			}
+			value, err := ec.unmarshalOString2ᚖstring(ctx, "_id,omitempty")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.GoTag == nil {
+				return nil, errors.New("directive goTag is not implemented")
+			}
+			return ec.directives.GoTag(ctx, obj, directive0, key, value)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(string); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be string`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)

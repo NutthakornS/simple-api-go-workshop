@@ -1,11 +1,18 @@
 package service
 
-import "github.com/NutthakornS/todos/graph/model"
+import (
+	"context"
 
-type todoService struct{}
+	"github.com/NutthakornS/todos/graph/model"
+	"go.mongodb.org/mongo-driver/bson"
+)
+
+type todoService struct {
+	collection string
+}
 
 var (
-	TodoService = todoService{}
+	TodoService = todoService{collection: "todo"}
 )
 
 func (s *todoService) Todos() ([]*model.Todo, error) {
@@ -25,6 +32,17 @@ func (s *todoService) Todos() ([]*model.Todo, error) {
 	return res, nil
 }
 
-func (s *todoService) User(obj *model.Todo) ([]*model.User, error) {
-	return nil, nil
+func (s *todoService) CreateTodo(input model.NewTodo) (*model.Todo, error) {
+	col := MongoDb.Collection(s.collection)
+	result, err := col.InsertOne(context.TODO(), &input)
+	if err != nil {
+		return nil, err
+	} else {
+		newU := model.Todo{}
+		err := col.FindOne(context.TODO(), bson.M{"_id": result.InsertedID}).Decode(&newU)
+		if err != nil {
+			return nil, err
+		}
+		return &newU, nil
+	}
 }

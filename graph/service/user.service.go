@@ -5,6 +5,7 @@ import (
 
 	"github.com/NutthakornS/todos/graph/model"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type userService struct{}
@@ -14,13 +15,11 @@ var (
 )
 
 func (s *userService) Users() ([]*model.User, error) {
-	users := []*model.User{}
-	usr := model.User{
-		ID:   "snk-001",
-		Name: "Warakorn",
-	}
-	result := append(users, &usr)
-	return result, nil
+	col := MongoDb.Collection("user")
+	cursor, err := col.Find(context.TODO(), bson.M{}, &opts)
+	var users []*model.User
+	cursor.All(context.TODO(), &users)
+	return users, err
 }
 
 func (s *userService) CreateUser(input model.NewUser) (*model.User, error) {
@@ -35,5 +34,19 @@ func (s *userService) CreateUser(input model.NewUser) (*model.User, error) {
 			return nil, err
 		}
 		return &newU, nil
+	}
+}
+
+func (s *userService) DeleteUser(id string) (bool, error) {
+	col := MongoDb.Collection("user")
+	nId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return false, err
+	}
+	res := col.FindOneAndDelete(context.TODO(), bson.M{"_id": nId})
+	if res.Err() != nil {
+		return false, res.Err()
+	} else {
+		return true, nil
 	}
 }
